@@ -25,7 +25,7 @@ func main() {
 
 	app.Use(logger.New())
 
-	app.Get("/add/:a/:b", func(c *fiber.Ctx) error {
+	app.Get("/add/:a/:b/:c", func(c *fiber.Ctx) error {
 		a, err := strconv.ParseUint(c.Params("a"), 10, 64)
 		if err != nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -38,7 +38,13 @@ func main() {
 				"error": "Invalid argument B",
 			})
 		}
-		req := &proto.Request{A: int64(a), B: int64(b)}
+		caca, err := strconv.ParseUint(c.Params("c"), 10, 64)
+		if err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"error": "Invalid argument C",
+			})
+		}
+		req := &proto.Request{A: int64(a), B: int64(b), C: int64(caca)}
 		if res, err := client.Add(context.Background(), req); err == nil {
 			return c.Status(fiber.StatusOK).JSON(fiber.Map{
 				"result": fmt.Sprint(res.Result),

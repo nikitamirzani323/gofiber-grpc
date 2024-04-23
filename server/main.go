@@ -4,12 +4,14 @@ import (
 	"context"
 	"net"
 
-	"github.com/gofiber/recipes/fiber-grpc/proto"
+	"github.com/nikitamirzani323/gofiber-grpc/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
-type server struct{}
+type server struct {
+	proto.UnimplementedAddServiceServer
+}
 
 func main() {
 	lis, err := net.Listen("tcp", ":4040")
@@ -26,17 +28,17 @@ func main() {
 }
 
 func (s *server) Add(_ context.Context, request *proto.Request) (*proto.Response, error) {
-	a, b := request.GetA(), request.GetB()
+	a, b, c := request.GetA(), request.GetB(), request.GetC()
 
-	result := a + b
+	result := a + b + c
 
 	return &proto.Response{Result: result}, nil
 }
 
 func (s *server) Multiply(_ context.Context, request *proto.Request) (*proto.Response, error) {
-	a, b := request.GetA(), request.GetB()
+	a, b, c := request.GetA(), request.GetB(), request.GetC()
 
-	result := a * b
+	result := a * b * c
 
 	return &proto.Response{Result: result}, nil
 }
